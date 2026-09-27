@@ -3,8 +3,12 @@
 Paste / adapt this when opening an issue or discussion upstream
 (e.g. [basecamp/omarchy](https://github.com/basecamp/omarchy) or the Omarchy packages repo).
 
-**Before opening:** attach a public clone URL (and ideally 1–2 screenshots). Without that,
-maintainers cannot try the app.
+**Clone URL:** https://github.com/sascburk/omarchy-fb-qt
+
+Screenshots (also in the repo root):
+
+- Root listing: https://github.com/sascburk/omarchy-fb-qt/blob/main/omarchy-fb-qt_root.png
+- Image preview: https://github.com/sascburk/omarchy-fb-qt/blob/main/omarchy-fb-qt_preview.png
 
 ---
 
@@ -31,7 +35,7 @@ can optionally set it as the default folder handler and/or rebind `SUPER+SHIFT+F
 
 ## What’s already implemented (prototype)
 
-Repo: *[add public URL here]* — proposed package name **`omarchy-fb-qt`**
+Repo: https://github.com/sascburk/omarchy-fb-qt — proposed package name **`omarchy-fb-qt`**
 
 - Navigate folders (`Enter` / `←` `→` / `Backspace`), preview pane (text, images,
   video/audio, optional PDF via `qt6-webengine`)

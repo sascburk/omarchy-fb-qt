@@ -3,6 +3,16 @@
 Native file browser for Omarchy with feature parity to the TUI prototype under
 `TUI_File_Browser`. Live Omarchy theme sync and desktop text scaling (like Omacalc).
 
+## Screenshots
+
+Browsing `/` (folder list + directory preview):
+
+![Root directory view](omarchy-fb-qt_root.png)
+
+Image preview pane:
+
+![Image preview](omarchy-fb-qt_preview.png)
+
 ## Quick install
 
 ```bash
