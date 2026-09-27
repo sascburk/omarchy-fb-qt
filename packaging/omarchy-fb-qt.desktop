@@ -1,0 +1,13 @@
+[Desktop Entry]
+Type=Application
+Name=Omarchy File Browser
+GenericName=File Manager
+Comment=Qt Quick file browser for Omarchy
+Comment[de]=Qt-Quick-Dateimanager für Omarchy
+Exec=omarchy-fb-qt %u
+Icon=omarchy-fb-qt
+Terminal=false
+Categories=System;FileTools;FileManager;
+Keywords=files;browser;manager;omarchy;
+MimeType=inode/directory;
+StartupWMClass=omarchy-fb-qt

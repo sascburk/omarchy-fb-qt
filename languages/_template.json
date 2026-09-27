@@ -1,0 +1,9 @@
+{
+  "meta.name": "Language Name",
+  "meta.code": "xx",
+
+  "_comment": "Copy this file to <code>.json (e.g. fr.json) and translate all values. Keys must stay identical to en.json.",
+
+  "app.window_title": "Omarchy File Browser — %1",
+  "app.display_name": "Omarchy File Browser"
+}

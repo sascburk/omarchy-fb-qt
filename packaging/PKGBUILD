@@ -1,0 +1,59 @@
+# Maintainer: Sascha <sascha@localhost>
+
+pkgname=omarchy-fb-qt
+pkgver=0.1.0
+pkgrel=1
+pkgdesc='Omarchy file browser built with Qt Quick (C++/QML)'
+arch=('x86_64' 'aarch64')
+url='https://github.com/omacom-io/omarchy-fb-qt'
+license=('MIT')
+install='omarchy-fb-qt.install'
+options=('!debug')
+depends=(
+  'hicolor-icon-theme'
+  'qt6-base'
+  'qt6-declarative'
+  'qt6-multimedia'
+  'xdg-desktop-portal'
+)
+optdepends=(
+  'ttf-ia-writer: preferred UI font (iA Writer Mono S)'
+  'glib2: trash support via gio trash'
+  'trash-cli: trash support via trash-put'
+  'gst-libav: extra codecs for video preview'
+  'gst-plugins-good: extra codecs for video preview'
+  'qt6-webengine: PDF page preview (QtQuick.Pdf)'
+)
+makedepends=(
+  'cmake'
+  'gcc'
+  'make'
+  'qt6-base'
+  'qt6-declarative'
+  'qt6-multimedia'
+)
+# After the first GitHub release, set tag v$pkgver and update the checksum.
+# Local package: bash packaging/makepkg-local.sh  (or: bash install.sh package)
+source=("$pkgname-$pkgver.tar.gz::https://github.com/omacom-io/omarchy-fb-qt/archive/refs/tags/v$pkgver.tar.gz")
+sha256sums=('SKIP')
+
+build() {
+  cd "$srcdir/$pkgname-$pkgver"
+  cmake -S . -B build \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/usr
+  cmake --build build -j"$(nproc)"
+}
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+  DESTDIR="$pkgdir" cmake --install build
+
+  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  install -Dm644 packaging/omarchy-fb-qt.svg \
+    "$pkgdir/usr/share/icons/hicolor/scalable/apps/omarchy-fb-qt.svg"
+  install -Dm644 packaging/omarchy-fb-qt.desktop \
+    "$pkgdir/usr/share/applications/omarchy-fb-qt.desktop"
+  install -d "$pkgdir/usr/share/omarchy-fb-qt/languages"
+  install -Dm644 languages/*.json "$pkgdir/usr/share/omarchy-fb-qt/languages/"
+}

@@ -1,0 +1,17 @@
+<RCC>
+    <qresource prefix="/">
+        <file>qml/Main.qml</file>
+        <file>qml/FileTreeView.qml</file>
+        <file>qml/FavoritesView.qml</file>
+        <file>qml/PreviewPane.qml</file>
+        <file>qml/PdfPreview.qml</file>
+        <file>qml/StatusBar.qml</file>
+        <file>qml/ConfirmDialog.qml</file>
+        <file>qml/TextInputDialog.qml</file>
+        <file>qml/ChoiceDialog.qml</file>
+        <file>qml/OpenWithDialog.qml</file>
+        <file>qml/HelpDialog.qml</file>
+        <file alias="languages/en.json">../languages/en.json</file>
+        <file alias="languages/de.json">../languages/de.json</file>
+    </qresource>
+</RCC>

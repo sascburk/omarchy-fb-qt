@@ -1,0 +1,15 @@
+build/
+.cache/
+CMakeFiles/
+cmake-build-*/
+packaging/out/
+*.pkg.tar.*
+*.user
+*.autosave
+.qmlcache/
+*.o
+*.a
+*.so
+*.qmlc
+*.jsc
+.DS_Store
