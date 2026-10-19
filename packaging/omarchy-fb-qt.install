@@ -1,12 +1,95 @@
-post_install() {
+_refresh_desktop_cache() {
   command -v update-desktop-database >/dev/null 2>&1 && update-desktop-database -q
   command -v gtk-update-icon-cache >/dev/null 2>&1 && gtk-update-icon-cache -q -t -f usr/share/icons/hicolor
 }
 
+_invoking_user() {
+  local user="${SUDO_USER:-}"
+  if [[ -z "$user" || "$user" == "root" ]]; then
+    user="$(logname 2>/dev/null || true)"
+  fi
+  if [[ -z "$user" || "$user" == "root" ]]; then
+    return 1
+  fi
+  printf '%s' "$user"
+}
+
+_run_as_user() {
+  local user="$1"
+  shift
+  local home uid runtime
+  home="$(getent passwd "$user" | cut -d: -f6)"
+  [[ -n "$home" && -d "$home" ]] || return 1
+  uid="$(id -u "$user")"
+  runtime="/run/user/${uid}"
+  if [[ -d "$runtime" ]]; then
+    runuser -u "$user" -- env HOME="$home" USER="$user" LOGNAME="$user" XDG_RUNTIME_DIR="$runtime" "$@"
+  else
+    runuser -u "$user" -- env HOME="$home" USER="$user" LOGNAME="$user" "$@"
+  fi
+}
+
+_ask_default_browser() {
+  local user reply current home state
+  command -v xdg-mime >/dev/null 2>&1 || return 0
+  command -v runuser >/dev/null 2>&1 || return 0
+  [[ -r /dev/tty && -w /dev/tty ]] || return 0
+
+  user="$(_invoking_user)" || return 0
+  home="$(getent passwd "$user" | cut -d: -f6)"
+  [[ -n "$home" ]] || return 0
+
+  current="$(_run_as_user "$user" xdg-mime query default inode/directory 2>/dev/null || true)"
+  [[ "$current" == "omarchy-fb-qt.desktop" ]] && return 0
+
+  printf '\nSet omarchy-fb-qt as the default browser for opening folders?\n'
+  printf 'Web links stay with the current web browser.\n'
+  read -r -p "Default browser for folders? [y/N] " reply </dev/tty || return 0
+  [[ "$reply" =~ ^[Yy]([Ee][Ss])?$ ]] || return 0
+
+  state="${home}/.local/state/omarchy-fb-qt"
+  _run_as_user "$user" mkdir -p "$state" || return 0
+  if [[ -n "$current" ]]; then
+    _run_as_user "$user" bash -c 'printf "%s\n" "$1" > "$2"' _ "$current" "${state}/previous-inode-directory" || true
+  fi
+  _run_as_user "$user" xdg-mime default omarchy-fb-qt.desktop inode/directory || return 0
+  _run_as_user "$user" xdg-mime default omarchy-fb-qt.desktop inode/mount-point || true
+  printf 'omarchy-fb-qt is now the default browser for folders.\n'
+}
+
+_restore_default_browser() {
+  local user home state previous current
+  command -v xdg-mime >/dev/null 2>&1 || return 0
+  command -v runuser >/dev/null 2>&1 || return 0
+  user="$(_invoking_user)" || return 0
+  home="$(getent passwd "$user" | cut -d: -f6)"
+  [[ -n "$home" ]] || return 0
+
+  state="${home}/.local/state/omarchy-fb-qt"
+  previous=""
+  if [[ -f "${state}/previous-inode-directory" ]]; then
+    previous="$(head -n 1 "${state}/previous-inode-directory")"
+  fi
+  [[ -n "$previous" ]] || previous="org.gnome.Nautilus.desktop"
+
+  current="$(_run_as_user "$user" xdg-mime query default inode/directory 2>/dev/null || true)"
+  if [[ "$current" == "omarchy-fb-qt.desktop" ]]; then
+    _run_as_user "$user" xdg-mime default "$previous" inode/directory || true
+    _run_as_user "$user" xdg-mime default "$previous" inode/mount-point || true
+  fi
+  rm -f "${state}/previous-inode-directory"
+}
+
+post_install() {
+  _refresh_desktop_cache
+  _ask_default_browser
+}
+
 post_upgrade() {
-  post_install
+  _refresh_desktop_cache
 }
 
 post_remove() {
-  post_install
+  _restore_default_browser
+  _refresh_desktop_cache
 }

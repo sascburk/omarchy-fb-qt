@@ -23,9 +23,11 @@ bash install.sh uninstall    # remove (+ restore defaults / hotkey)
 
 After install, the script asks whether to:
 
-1. Set **Omarchy File Browser** as the default folder handler (`xdg-mime` / `inode/directory`)
+1. Set **Omarchy File Browser** as the default browser for folders (`xdg-mime` / `inode/directory`). Web links are left unchanged.
 2. Bind **SUPER+SHIFT+F** to `omarchy-fb-qt` (overrides Omarchy’s Nautilus binding in
    `~/.config/hypr/bindings.lua`)
+
+`sudo pacman -U` asks the same default-browser question once, on first install. Upgrades do not ask again. Without a terminal the question is skipped.
 
 Non-interactive flags:
 

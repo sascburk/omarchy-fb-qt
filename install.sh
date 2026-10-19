@@ -128,9 +128,9 @@ set_default_file_manager() {
   local now
   now="$(xdg-mime query default inode/directory 2>/dev/null || true)"
   if [[ "$now" == "$DESKTOP_ID" ]]; then
-    ok "Default file manager: ${DESKTOP_ID}"
+    ok "Default browser for folders: ${DESKTOP_ID}"
   else
-    die "Failed to set default file manager (got: ${now:-none})"
+    die "Failed to set default browser for folders (got: ${now:-none})"
   fi
 }
 
@@ -147,7 +147,7 @@ restore_default_file_manager() {
   current="$(xdg-mime query default inode/directory 2>/dev/null || true)"
   if [[ "$current" == "$DESKTOP_ID" ]]; then
     xdg-mime default "$previous" inode/directory 2>/dev/null || true
-    ok "Restored default file manager: ${previous}"
+    ok "Restored previous browser for folders: ${previous}"
   fi
   rm -f "$STATE_DIR/previous-inode-directory"
 }
@@ -220,7 +220,8 @@ maybe_configure_desktop() {
   printf '\n%sDesktop integration%s\n' "$BOLD" "$RST"
 
   if [[ -z "$want_default" ]]; then
-    if ask_yes_no "Set ${PKGNAME} as the default file manager?" n; then
+    printf '%s  This handles folders only. Web links stay with the current web browser.%s\n' "$DIM" "$RST"
+    if ask_yes_no "Set ${PKGNAME} as the default browser for folders?" n; then
       want_default=y
     else
       want_default=n
@@ -229,7 +230,7 @@ maybe_configure_desktop() {
   if [[ "$want_default" == "y" ]]; then
     set_default_file_manager
   else
-    log "Skipped default file manager"
+    log "Skipped default browser for folders"
   fi
 
   if [[ -z "$want_hotkey" ]]; then
@@ -307,7 +308,7 @@ Omarchy File Browser — installer
   bash install.sh uninstall       Remove the application (+ restore defaults)
 
 Desktop integration flags (optional; otherwise asked interactively):
-  --default-fm / --no-default-fm  Set/skip as default handler for folders
+  --default-fm / --no-default-fm  Set/skip as default browser for folders
   --hotkey / --no-hotkey          Bind/skip SUPER+SHIFT+F
 
 Environment:
